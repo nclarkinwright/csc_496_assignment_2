@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         sum += numbers[i];
     }
 
-    printf("The sum of these integers is %d\n", sum);
+    printf("The sum of these integers is %d.\n", sum);
 
     fclose(fp);
     free(line);
