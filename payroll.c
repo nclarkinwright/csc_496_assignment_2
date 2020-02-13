@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     printf("Enter hours worked: ");
     getline(&line, &buf_size, stdin);
     hours_worked = strtod(line, &line);
-    //hours_worked_rnded = nearbyint(hours_worked);
+    hours_worked_rnded = round(hours_worked);
     line = NULL;
     
     printf("Enter hourly rate: ");
