@@ -11,11 +11,10 @@
 
 int main(int argc, char* argv[]) 
 {
-    char *line, *first_name, *last_name;
+    char *line = NULL, *first_name, *last_name;
     size_t buf_size = 0;
     const char delim[] = {' ','\t','\n','\v','\f','\r'};
-    double hours_worked;
-    int hours_worked_rnded;
+    int hours_worked;
     double hourly_rate;
     
     printf("Enter first name: ");
@@ -30,8 +29,7 @@ int main(int argc, char* argv[])
 
     printf("Enter hours worked: ");
     getline(&line, &buf_size, stdin);
-    hours_worked = strtod(line, &line);
-    hours_worked_rnded = round(hours_worked);
+    hours_worked = (int) round(strtod(line, &line));
     line = NULL;
     
     printf("Enter hourly rate: ");
@@ -39,6 +37,6 @@ int main(int argc, char* argv[])
     hourly_rate = strtod(line, &line);
     
     printf("%s, %s: %.2lf\n", last_name, first_name, hours_worked*hourly_rate);
-
+    
     return 0;
 }
