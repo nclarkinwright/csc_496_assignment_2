@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     filep = fopen(file, "r");
     if (filep == NULL)
     {
-        printf("sum: could not open file\n");
+        printf("sum: cannot open file\n");
         return 1;
     }
     
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     chars_read = getline(&line, &buf_size, filep);
     while (chars_read != -1)
     {
-        numbers[index] = atoi(line);
+        numbers[index] = strtol(line, &line, 0);
         ++index;
         chars_read = getline(&line, &buf_size, filep);
     }
@@ -46,7 +46,6 @@ int main(int argc, char* argv[])
     printf("The sum of these integers is %d.\n", sum);
 
     fclose(filep);
-    free(line);
     
     return 1;
 }
