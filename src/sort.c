@@ -8,94 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int my_partition(long int* array_left, long int* array_right, int array_size)
-{
-    long int pivot_value, pivot_index;
-    int left_index = 0;
-    int right_index = array_size - 1;
-    
-    // Pivot on first element
-    pivot_value = *array_left;
-    
-    // Which pointer, of left and right, is to be advanced towards center
-    int move_right = 1;
-    
-    // Sort array so elements less than pivot go on left, greater than pivot on right
-    while (left_index < right_index)
-    {
-        // Check values on right
-        while(move_right == 1)
-        {
-            // Break out of loop if pointers pass one another
-            if (left_index < right_index)
-            {
-                break;
-            }
-
-            // If value on right is less than pivot, move it left
-            // swap to moving left pointer
-            if (*array_right <= pivot_value)
-            {
-                *array_left = *array_right;
-                array_left++, left_index++;
-                move_right = 0;
-            }
-            // Else advance right pointer
-            else
-            {
-                array_right--, right_index--;
-            }
-        }
-
-        // Check values on left
-        while(move_right == 0)
-        {
-            // Break out of loop if pointers pass one another
-            if (left_index < right_index)
-            {
-                break;
-            }
-
-            // If value on left is greater than pivot, move it right
-            // swap to moving right pointer
-            if (*array_left >= pivot_value)
-            {
-                *array_right = *array_left;
-                array_right--, right_index--;
-                move_right = 1;
-            }
-            // Else advance left pointer
-            else
-            {
-                array_left++, left_index++;
-            }
-        }
-    }
-
-    // Place pivot
-    *array_left = pivot_value;
-    pivot_index = left_index;
-
-    return pivot_index;
-}
-
-void my_quick_sort(long int* array_left, long int* array_right, int array_size)
-{
-    int pivot_index;
-    
-    // Base case, array size 1 or 0
-    if (array_size <= 1)
-    {
-        return;
-    }
-
-    pivot_index = my_partition(array_left, array_right, array_size);
-    // Pass left side
-    my_quick_sort(array_left, array_right - pivot_index, pivot_index - 2);
-    // Pass right side
-    my_quick_sort(array_left + pivot_index + 1, array_right, array_size - pivot_index);
-}
-
 void display_int_array(int* array, int array_size)
 {
     for (int i = 0; i < array_size; i++)
@@ -106,12 +18,37 @@ void display_int_array(int* array, int array_size)
     return;
 }
 
+// Places int in an int array, that is already sorted, in a sorted spot by ascending order
+// Should be called on array repeatedly as elements are inserted
+void my_insertion_sort(int* array, int array_size, int to_be_inserted)
+{
+    // Start at end of array 
+    for(int i = array_size - 1; i >= 1; i--)
+    {
+        // If next element over from i, toward beginning of arary,  is less than value to be inserted, insert element
+        if (array[i - 1] <= to_be_inserted)
+        {
+            array[i] = to_be_inserted;
+            return;
+        }
+        // Move element greater than value to be inserted one spot closer to end of array
+        else
+        {
+            array[i] = array[i - 1];
+        }  
+    }
+
+    // Insert at beginning of array if all values are greater than to_be_inserted
+    array[0] = to_be_inserted;
+    return;
+}
+
 int main(int argc, char* argv[])
 {
     char *file, *line, *number_str;
     size_t buf_size = 0;
     FILE *filep;
-    int chars_read, numbers_size = 0, *numbers = NULL, *numbers_right, number;
+    int chars_read, numbers_size = 0, *numbers = NULL, number, could_not_place;
     
     // Exit with improperly formatted command
     if (argc != 2)
@@ -139,9 +76,9 @@ int main(int argc, char* argv[])
         numbers_size++;
         numbers = (int*)realloc(numbers, numbers_size * sizeof(int));
         
-        // Convert integer in string to an int and place in array
-        number = strtol(number_str, &number_str, 0);
-        numbers[numbers_size - 1] = number;
+        // Convert integer in string to an int and place in array using insertion sort
+        number = (int)strtol(number_str, &number_str, 0);
+        my_insertion_sort(numbers, numbers_size, number);
         
         // Call strtok() until line is empty
         while((number_str = strtok(NULL, " ")) != NULL)
@@ -150,18 +87,14 @@ int main(int argc, char* argv[])
             numbers_size++;
             numbers = (int*)realloc(numbers, numbers_size * sizeof(int));
             
-            // Convert integer in string to an int and place in array
-            number = strtol(number_str, &number_str, 0);
-            numbers[numbers_size - 1] = number;
+            // Convert integer in string to an int and place in array using insertion sort
+            number = (int)strtol(number_str, &number_str, 0);
+            my_insertion_sort(numbers, numbers_size, number);
         }
     }
 
     // Close file when no longer needed
     fclose(filep);
-    
-    // Sort numbers
-    //numbers_right = numbers + numbers_size + 1;
-    //my_quick_sort(numbers, numbers_right, numbers_size);
 
     // Display array of numbers
     display_int_array(numbers, numbers_size);
