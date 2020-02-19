@@ -38,10 +38,6 @@ int main(int argc, char* argv[])
     
     printf("%s, %s: %.2lf\n", last_name, first_name, hours_worked*hourly_rate);
     
-    if (line == NULL)
-    {
-        free(line);
-    }
     free(first_name);
     free(last_name);
 
