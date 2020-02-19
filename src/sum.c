@@ -10,7 +10,7 @@
 int main(int argc, char* argv[])
 {
     char *line = NULL, *file;
-    size_t buf_size = 0;
+    size_t buf_size;
     int numbers[10], index = 0, chars_read, sum = 0;
     FILE *filep;
     
@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
     if (argc != 2) {
         return 0;
     }
-    file = argv[1];
 
     // Open file and check it
+    file = argv[1];
     filep = fopen(file, "r");
     if (filep == NULL)
     {

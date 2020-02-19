@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
     char *file, *line;
     FILE *filep;
-    size_t buf_size = 0;
+    size_t buf_size;
     int chars_read;
 
     // If no file names given, exit

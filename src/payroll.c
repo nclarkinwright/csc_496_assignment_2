@@ -12,7 +12,7 @@
 int main(int argc, char* argv[]) 
 {
     char *line = NULL, *first_name, *last_name;
-    size_t buf_size = 0;
+    size_t buf_size;
     const char delim[] = {' ','\t','\n','\v','\f','\r'};
     int hours_worked;
     double hourly_rate;
@@ -38,5 +38,12 @@ int main(int argc, char* argv[])
     
     printf("%s, %s: %.2lf\n", last_name, first_name, hours_worked*hourly_rate);
     
+    if (line == NULL)
+    {
+        free(line);
+    }
+    free(first_name);
+    free(last_name);
+
     return 0;
 }
