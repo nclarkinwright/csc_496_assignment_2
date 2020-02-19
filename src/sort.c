@@ -96,7 +96,7 @@ void my_quick_sort(long int* array_left, long int* array_right, int array_size)
     my_quick_sort(array_left + pivot_index + 1, array_right, array_size - pivot_index);
 }
 
-void display_long_int_array(long int* array, int array_size)
+void display_int_array(int* array, int array_size)
 {
     for (int i = 0; i < array_size; i++)
     {
@@ -108,11 +108,10 @@ void display_long_int_array(long int* array, int array_size)
 
 int main(int argc, char* argv[])
 {
-    char *file, *line, *line_numbers;
+    char *file, *line, *number_str;
     size_t buf_size = 0;
     FILE *filep;
-    int chars_read, numbers_size = 0;
-    long int *numbers, *numbers_right, number;
+    int chars_read, numbers_size = 0, *numbers = NULL, *numbers_right, number;
     
     // Exit with improperly formatted command
     if (argc != 2)
@@ -130,13 +129,29 @@ int main(int argc, char* argv[])
     }
      
     // Get list of integers out of file and into array
-    numbers = malloc(sizeof(long int));
     while( (chars_read = getline(&line, &buf_size, filep)) != -1)
     {
-        while((number = strtol(line, &line, 0)) != 0)
+        // For first integer on a line, must perform once outside of inner loop because of
+        // strtok() behavior
+        number_str = strtok(line, " ");
+        
+        // Increase size of array and resize array in memory
+        numbers_size++;
+        numbers = (int*)realloc(numbers, numbers_size * sizeof(int));
+        
+        // Convert integer in string to an int and place in array
+        number = strtol(number_str, &number_str, 0);
+        numbers[numbers_size - 1] = number;
+        
+        // Call strtok() until line is empty
+        while((number_str = strtok(NULL, " ")) != NULL)
         {
-            ++numbers_size;
-            numbers = realloc(numbers, numbers_size * sizeof(long));
+            // Increase size of array and resize array in memory
+            numbers_size++;
+            numbers = (int*)realloc(numbers, numbers_size * sizeof(int));
+            
+            // Convert integer in string to an int and place in array
+            number = strtol(number_str, &number_str, 0);
             numbers[numbers_size - 1] = number;
         }
     }
@@ -149,9 +164,13 @@ int main(int argc, char* argv[])
     //my_quick_sort(numbers, numbers_right, numbers_size);
 
     // Display array of numbers
-    display_long_int_array(numbers, numbers_size);
+    display_int_array(numbers, numbers_size);
 
     free(numbers);
+    if (line != NULL)
+    {
+        free(line);
+    }
 
     return 0;
 }
